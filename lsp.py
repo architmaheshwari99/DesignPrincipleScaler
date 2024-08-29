@@ -1,62 +1,74 @@
-from abc import abstractmethod, ABC
+class Bird:
+    def fly(self):
+        return "I can fly!"
 
 
-class Rectangle:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-    def area(self):
-        return self.width * self.height
+class Sparrow(Bird):
+    def fly(self):
+        return "Sparrow flying!"
 
 
-class Square(Rectangle):
-    def __init__(self, side):
-        super().__init__(side, side)
+class Ostrich(Bird):
+    def fly(self):
+        raise NotImplementedError("Ostrich can't fly!")
 
 
-def print_area(rectangle):
-    rectangle.width = 5
-    rectangle.height = 10
-    print(rectangle.area())
+# Function that uses the Bird class
+def make_bird_fly(bird: Bird):
+    return bird.fly()
 
 
-rect = Rectangle(2, 3)
-print_area(rect)  # Outputs: 6
+# Now let's test it
+sparrow = Sparrow()
+ostrich = Ostrich()
 
-sq = Square(4)
-print_area(sq)  # This will output: 50, which is incorrect for a square.
-
-
-class ShapeImproved(ABC):
-    @abstractmethod
-    def area(self):
-        pass
-
-
-class RectangleImproved(ShapeImproved):
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-    def area(self):
-        return self.width * self.height
-
-
-class SquareImproved(ShapeImproved):
-    def __init__(self, side):
-        self.side = side
-
-    def area(self):
-        return self.side * self.side
-
-
-def print_area_improved(shape):
-    print(shape.area())
-
+print(make_bird_fly(sparrow))  # Output: "Sparrow flying!"
+print(make_bird_fly(ostrich))  # Output: NotImplementedError
 
 """
-Both Rectangle and Square implement the Shape interface, 
-ensuring they can be used interchangeably without violating expected behavior.
+the Ostrich class now adheres to the Liskov Substitution Principle because it 
+doesn’t override a method in a way that breaks the expected behavior. 
+The design is also improved by introducing a FlyingBird class for birds that can 
+fly, allowing Sparrow to inherit from it and Ostrich to remain a subclass of Bird 
+without implementing fly
 
 """
+
+
+class Bird:
+    def move(self):
+        return "I can move!"
+
+
+class FlyingBird(Bird):
+    def fly(self):
+        return "I can fly!"
+
+
+class Sparrow(FlyingBird):
+    def fly(self):
+        return "Sparrow flying!"
+
+
+class Ostrich(Bird):
+    def move(self):
+        return "Ostrich running!"
+
+
+# Function that uses the Bird class
+def make_bird_move(bird: Bird):
+    return bird.move()
+
+
+# Function that uses the FlyingBird class
+def make_bird_fly(bird: FlyingBird):
+    return bird.fly()
+
+
+# Now let's test it
+sparrow = Sparrow()
+ostrich = Ostrich()
+
+print(make_bird_move(sparrow))  # Output: "I can move!"
+print(make_bird_fly(sparrow))  # Output: "Sparrow flying!"
+print(make_bird_move(ostrich))  # Output: "Ostrich running!"
